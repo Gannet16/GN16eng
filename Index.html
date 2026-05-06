@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Daily Vocab Mission – 25 คำสู่ ม.ต้น</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #0ea5e9;
+    --sun: #fbbf24;
+    --grass: #22c55e;
+    --pink: #f472b6;
+    --purple: #a78bfa;
+    --card-bg: #ffffff;
+    --shadow: 0 8px 32px rgba(14,165,233,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fdf4ff 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star {
+    position: absolute; border-radius: 50%;
+    background: var(--sun); opacity: 0;
+    animation: twinkle 3s infinite;
+  }
+
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.6; transform: scale(1); }
+  }
+
+  /* Header */
+  header {
+    position: relative; z-index: 10;
+    text-align: center; padding: 2rem 1rem 1rem;
+  }
+
+  .title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--sky);
+    text-shadow: 0 4px 0 rgba(14,165,233,0.2);
+    animation: bounceIn 0.8s cubic-bezier(0.34,1.56,0.64,1);
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: 1rem; color: #64748b; margin-top: 6px; font-weight: 700;
+  }
+
+  @keyframes bounceIn {
+    from { transform: translateY(-60px) scale(0.8); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 600px; margin: 1rem auto;
+    padding: 0 1rem; position: relative; z-index: 10;
+  }
+
+  .progress-info {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 14px; background: #e2e8f0;
+    border-radius: 999px; overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sky), var(--purple));
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* Category tabs */
+  .tabs {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 8px; padding: 0.5rem 1rem 1rem;
+    position: relative; z-index: 10;
+  }
+
+  .tab {
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.8rem;
+    padding: 6px 14px; border-radius: 999px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.2s; background: white;
+    color: #64748b; border-color: #e2e8f0;
+  }
+
+  .tab.active { color: white; border-color: transparent; }
+  .tab[data-cat="all"].active { background: var(--sky); }
+  .tab[data-cat="school"].active { background: #3b82f6; }
+  .tab[data-cat="verb"].active { background: var(--grass); }
+  .tab[data-cat="adj"].active { background: var(--pink); }
+  .tab[data-cat="daily"].active { background: var(--purple); }
+
+  /* Main card */
+  .main-area {
+    max-width: 680px; margin: 0 auto;
+    padding: 0 1rem 2rem;
+    position: relative; z-index: 10;
+  }
+
+  .card-container {
+    perspective: 1200px;
+    height: 320px; position: relative;
+  }
+
+  .vocab-card {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.34,1.2,0.64,1);
+    cursor: pointer;
+  }
+
+  .vocab-card.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 24px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05);
+  }
+
+  .card-front {
+    background: white;
+    border: 3px solid transparent;
+  }
+
+  .card-back {
+    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    transform: rotateY(180deg);
+    color: white;
+  }
+
+  .word-badge {
+    font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em;
+    padding: 4px 12px; border-radius: 999px; margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .word-en {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    color: #0f172a; line-height: 1;
+    text-align: center; margin-bottom: 0.5rem;
+    animation: wordPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes wordPop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .word-type {
+    font-size: 0.85rem; color: #94a3b8; font-weight: 700;
+    font-style: italic;
+  }
+
+  .flip-hint {
+    position: absolute; bottom: 16px; right: 20px;
+    font-size: 0.75rem; color: #cbd5e1; font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .speak-btn {
+    position: absolute; top: 16px; right: 16px;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--sky), var(--purple));
+    color: white; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(14,165,233,0.35);
+    transition: all 0.2s; z-index: 5;
+  }
+  .speak-btn:hover { transform: scale(1.1); box-shadow: 0 6px 18px rgba(14,165,233,0.5); }
+  .speak-btn:active { transform: scale(0.95); }
+  .speak-btn.speaking {
+    animation: pulse-ring 0.8s infinite;
+    background: linear-gradient(135deg, #f472b6, #a78bfa);
+  }
+
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(244,114,182,0.5); }
+    70%  { box-shadow: 0 0 0 12px rgba(244,114,182,0); }
+    100% { box-shadow: 0 0 0 0 rgba(244,114,182,0); }
+  }
+
+  .speak-back-btn {
+    margin-top: 1rem;
+    padding: 8px 20px; border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.85rem;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+  }
+  .speak-back-btn:hover { background: rgba(255,255,255,0.25); }
+  .speak-back-btn.speaking { background: rgba(255,255,255,0.3); }
+
+  /* Back card content */
+  .word-th {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    color: white; margin-bottom: 0.75rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .example-sentence {
+    font-size: 0.95rem; color: rgba(255,255,255,0.9);
+    text-align: center; line-height: 1.6;
+    background: rgba(255,255,255,0.15);
+    padding: 12px 20px; border-radius: 14px;
+    font-weight: 600; max-width: 380px;
+  }
+
+  /* Navigation */
+  .nav-area {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-top: 1.5rem;
+  }
+
+  .btn {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 1rem; padding: 12px 24px;
+    border: none; border-radius: 14px; cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 8px;
+  }
+
+  .btn-prev {
+    background: #f1f5f9; color: #475569;
+  }
+  .btn-prev:hover { background: #e2e8f0; transform: translateX(-2px); }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--sky), var(--purple));
+    color: white;
+    box-shadow: 0 4px 16px rgba(14,165,233,0.4);
+  }
+  .btn-next:hover { transform: translateX(2px) scale(1.03); box-shadow: 0 6px 20px rgba(14,165,233,0.5); }
+
+  .btn:active { transform: scale(0.96); }
+
+  .card-counter {
+    font-weight: 800; color: #64748b; font-size: 1rem; min-width: 80px; text-align: center;
+  }
+
+  /* Word list mini grid */
+  .words-grid {
+    margin-top: 2rem;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+
+  .word-chip {
+    background: white; border: 2px solid #e2e8f0;
+    border-radius: 12px; padding: 8px 10px;
+    cursor: pointer; transition: all 0.2s;
+    text-align: center; font-weight: 700; font-size: 0.85rem;
+    color: #334155;
+    animation: fadeInUp 0.4s both;
+  }
+
+  .word-chip:hover { border-color: var(--sky); color: var(--sky); transform: translateY(-2px); }
+  .word-chip.current { background: var(--sky); color: white; border-color: var(--sky); }
+  .word-chip .chip-th { font-size: 0.7rem; color: #94a3b8; font-weight: 600; }
+  .word-chip.current .chip-th { color: rgba(255,255,255,0.8); }
+
+  @keyframes fadeInUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Category colors */
+  .school-badge { background: #dbeafe; color: #1d4ed8; }
+  .verb-badge   { background: #dcfce7; color: #15803d; }
+  .adj-badge    { background: #fce7f3; color: #be185d; }
+  .daily-badge  { background: #ede9fe; color: #6d28d9; }
+
+  .card-front.school { border-color: #93c5fd; }
+  .card-front.verb   { border-color: #86efac; }
+  .card-front.adj    { border-color: #f9a8d4; }
+  .card-front.daily  { border-color: #c4b5fd; }
+
+  /* Confetti burst */
+  .confetti-wrap {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 100;
+  }
+
+  .confetti-piece {
+    position: absolute; width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall 1.5s ease-in forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Sections */
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem; color: #475569; margin: 1.5rem 0 0.75rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .badge-count {
+    background: var(--sky); color: white; font-size: 0.75rem;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    padding: 2px 8px; border-radius: 999px;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .card-container { height: 280px; }
+    .words-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<header>
+  <div class="title">🚀 Daily Vocab Mission</div>
+  <div class="subtitle">25 คำศัพท์พื้นฐานสู่ ม.ต้น — แตะการ์ดเพื่อดูความหมาย!</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-info">
+    <span id="prog-text">คำที่ 1 / 25</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="prog-fill" style="width:4%"></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-cat="all" onclick="filterCat('all')">📚 ทั้งหมด</button>
+  <button class="tab" data-cat="school" onclick="filterCat('school')">🏫 โรงเรียน</button>
+  <button class="tab" data-cat="verb" onclick="filterCat('verb')">⚡ กริยา</button>
+  <button class="tab" data-cat="adj" onclick="filterCat('adj')">🌟 คุณศัพท์</button>
+  <button class="tab" data-cat="daily" onclick="filterCat('daily')">🌈 ชีวิตประจำวัน</button>
+</div>
+
+<div class="main-area">
+  <div class="card-container">
+    <div class="vocab-card" id="vocabCard" onclick="flipCard()">
+      <div class="card-face card-front" id="cardFront">
+        <button class="speak-btn" id="speakFrontBtn" onclick="speakWord(event)" title="ฟังเสียงคำศัพท์">🔊</button>
+        <span class="word-badge" id="cardBadge"></span>
+        <div class="word-en" id="cardEn"></div>
+        <div class="word-type" id="cardType"></div>
+        <div class="flip-hint">แตะเพื่อดูความหมาย 👆</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="word-th" id="cardTh"></div>
+        <div class="example-sentence" id="cardEx"></div>
+        <button class="speak-back-btn" id="speakExBtn" onclick="speakExample(event)">🔊 ฟังประโยคตัวอย่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <button class="btn btn-prev" onclick="prevCard()">← ย้อนกลับ</button>
+    <div class="card-counter" id="cardCounter">1 / 25</div>
+    <button class="btn btn-next" onclick="nextCard()">ถัดไป →</button>
+  </div>
+
+  <div class="section-title">
+    📋 รายการคำศัพท์
+    <span class="badge-count" id="listCount">25</span>
+  </div>
+  <div class="words-grid" id="wordsGrid"></div>
+</div>
+
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<script>
+const ALL_WORDS = [
+  { en:"Schedule", type:"Noun", th:"ตารางเวลา", ex:"Check your class schedule.", cat:"school" },
+  { en:"Subject",  type:"Noun", th:"วิชา",       ex:"Math is my favorite subject.", cat:"school" },
+  { en:"Assignment", type:"Noun", th:"งานที่ได้รับมอบหมาย", ex:"I finished my English assignment.", cat:"school" },
+  { en:"Experiment", type:"Noun/Verb", th:"การทดลอง", ex:"We did a science experiment.", cat:"school" },
+  { en:"Library",  type:"Noun", th:"ห้องสมุด",  ex:"Study quietly in the library.", cat:"school" },
+  { en:"Prepare",  type:"Verb", th:"เตรียมตัว", ex:"Prepare for the upcoming exam.", cat:"verb" },
+  { en:"Describe", type:"Verb", th:"บรรยาย",    ex:"Can you describe your pet?", cat:"verb" },
+  { en:"Explain",  type:"Verb", th:"อธิบาย",    ex:"Please explain the rule.", cat:"verb" },
+  { en:"Participate", type:"Verb", th:"มีส่วนร่วม", ex:"Try to participate in class.", cat:"verb" },
+  { en:"Improve",  type:"Verb", th:"พัฒนา",     ex:"I want to improve my English.", cat:"verb" },
+  { en:"Diligent", type:"Adjective", th:"ขยัน", ex:"A diligent student gets good grades.", cat:"adj" },
+  { en:"Curious",  type:"Adjective", th:"อยากรู้อยากเห็น", ex:"He is a curious child.", cat:"adj" },
+  { en:"Creative", type:"Adjective", th:"สร้างสรรค์", ex:"Your art project is very creative.", cat:"adj" },
+  { en:"Efficient",type:"Adjective", th:"มีประสิทธิภาพ", ex:"Find an efficient way to study.", cat:"adj" },
+  { en:"Confident",type:"Adjective", th:"มั่นใจ", ex:"Be confident when you speak.", cat:"adj" },
+  { en:"Healthy",  type:"Adjective", th:"แข็งแรง / ดีต่อสุขภาพ", ex:"Eat healthy food.", cat:"daily" },
+  { en:"Information", type:"Noun", th:"ข้อมูล", ex:"I found the information online.", cat:"daily" },
+  { en:"Challenge",type:"Noun", th:"ความท้าทาย", ex:"Middle school is a new challenge.", cat:"daily" },
+  { en:"Community",type:"Noun", th:"ชุมชน",     ex:"We live in a friendly community.", cat:"daily" },
+  { en:"Opportunity", type:"Noun", th:"โอกาส",  ex:"Learning English is a great opportunity.", cat:"daily" },
+  { en:"Necessary",type:"Adjective", th:"จำเป็น", ex:"It is necessary to sleep early.", cat:"daily" },
+  { en:"Suggest",  type:"Verb", th:"แนะนำ",     ex:"I suggest we go to the park.", cat:"daily" },
+  { en:"Environment", type:"Noun", th:"สิ่งแวดล้อม", ex:"Protect the environment.", cat:"daily" },
+  { en:"Culture",  type:"Noun", th:"วัฒนธรรม", ex:"Learn about different cultures.", cat:"daily" },
+  { en:"Believe",  type:"Verb", th:"เชื่อ",     ex:"Believe in yourself.", cat:"daily" },
+];
+
+const CAT_LABEL = { school:"🏫 โรงเรียน", verb:"⚡ กริยา", adj:"🌟 คุณศัพท์", daily:"🌈 ชีวิตประจำวัน" };
+const CAT_CLASS = { school:"school", verb:"verb", adj:"adj", daily:"daily" };
+
+let filtered = [...ALL_WORDS];
+let currentIdx = 0;
+let isFlipped = false;
+
+function filterCat(cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-cat="${cat}"]`).classList.add('active');
+  filtered = cat === 'all' ? [...ALL_WORDS] : ALL_WORDS.filter(w => w.cat === cat);
+  currentIdx = 0;
+  isFlipped = false;
+  document.getElementById('vocabCard').classList.remove('flipped');
+  renderCard();
+  renderGrid();
+}
+
+function renderCard() {
+  const w = filtered[currentIdx];
+  if (!w) return;
+  const cat = w.cat;
+  const front = document.getElementById('cardFront');
+  front.className = 'card-face card-front ' + CAT_CLASS[cat];
+  document.getElementById('cardBadge').className = 'word-badge ' + cat + '-badge';
+  document.getElementById('cardBadge').textContent = CAT_LABEL[cat];
+  document.getElementById('cardEn').textContent = w.en;
+  document.getElementById('cardType').textContent = w.type;
+  document.getElementById('cardTh').textContent = w.th;
+  document.getElementById('cardEx').innerHTML = `"${w.ex}"`;
+
+  // Progress
+  const total = filtered.length;
+  const pct = Math.round(((currentIdx + 1) / total) * 100);
+  document.getElementById('prog-text').textContent = `คำที่ ${currentIdx+1} / ${total}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = Math.max(4, pct) + '%';
+  document.getElementById('cardCounter').textContent = `${currentIdx+1} / ${total}`;
+
+  // Highlight in grid
+  document.querySelectorAll('.word-chip').forEach((el, i) => {
+    el.classList.toggle('current', i === currentIdx);
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('wordsGrid');
+  document.getElementById('listCount').textContent = filtered.length;
+  grid.innerHTML = filtered.map((w, i) => `
+    <div class="word-chip" style="animation-delay:${i*0.03}s" onclick="jumpTo(${i})">
+      <div>${w.en}</div>
+      <div class="chip-th">${w.th}</div>
+    </div>
+  `).join('');
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('vocabCard').classList.toggle('flipped', isFlipped);
+  if (isFlipped) spawnStars();
+}
+
+function nextCard() {
+  if (currentIdx < filtered.length - 1) {
+    currentIdx++;
+  } else {
+    currentIdx = 0;
+    fireConfetti();
+  }
+  isFlipped = false;
+  document.getElementById('vocabCard').classList.remove('flipped');
+  renderCard();
+  renderGrid();
+}
+
+function prevCard() {
+  currentIdx = Math.max(0, currentIdx - 1);
+  isFlipped = false;
+  document.getElementById('vocabCard').classList.remove('flipped');
+  renderCard();
+  renderGrid();
+}
+
+function jumpTo(idx) {
+  currentIdx = idx;
+  isFlipped = false;
+  document.getElementById('vocabCard').classList.remove('flipped');
+  renderCard();
+  renderGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function spawnStars() {
+  const wrap = document.getElementById('stars');
+  for (let i = 0; i < 6; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.width = s.style.height = Math.random()*8+4 + 'px';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*80 + 'vh';
+    s.style.animationDelay = Math.random()*1 + 's';
+    s.style.animationDuration = (Math.random()*2+1.5) + 's';
+    const colors = ['#fbbf24','#f472b6','#a78bfa','#34d399','#60a5fa'];
+    s.style.background = colors[Math.floor(Math.random()*colors.length)];
+    wrap.appendChild(s);
+    setTimeout(() => s.remove(), 4000);
+  }
+}
+
+function fireConfetti() {
+  const wrap = document.getElementById('confettiWrap');
+  const colors = ['#0ea5e9','#fbbf24','#f472b6','#22c55e','#a78bfa','#fb923c'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.top = '-10px';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.width = c.style.height = Math.random()*10+6 + 'px';
+    c.style.animationDelay = Math.random()*0.8 + 's';
+    c.style.animationDuration = Math.random()*1 + 1.2 + 's';
+    if (Math.random() > 0.5) c.style.borderRadius = '50%';
+    wrap.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+// Init background stars
+(function() {
+  const wrap = document.getElementById('stars');
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.width = s.style.height = Math.random()*6+3 + 'px';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*100 + 'vh';
+    s.style.animationDelay = Math.random()*3 + 's';
+    s.style.animationDuration = Math.random()*2+2 + 's';
+    wrap.appendChild(s);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextCard();
+  if (e.key === 'ArrowLeft') prevCard();
+  if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  if (e.key === 's' || e.key === 'S') speakWord(e);
+});
+
+function speak(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.pitch = 1;
+  if (btn) {
+    btn.classList.add('speaking');
+    utter.onend = () => btn.classList.remove('speaking');
+    utter.onerror = () => btn.classList.remove('speaking');
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+function speakWord(e) {
+  e.stopPropagation();
+  const word = filtered[currentIdx]?.en;
+  if (word) speak(word, document.getElementById('speakFrontBtn'));
+}
+
+function speakExample(e) {
+  e.stopPropagation();
+  const ex = filtered[currentIdx]?.ex;
+  if (ex) speak(ex, document.getElementById('speakExBtn'));
+}
+
+renderCard();
+renderGrid();
+</script>
+</body>
+</html>
